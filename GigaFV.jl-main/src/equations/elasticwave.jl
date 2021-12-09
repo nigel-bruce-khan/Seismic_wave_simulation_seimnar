@@ -35,20 +35,22 @@ end
 
 function get_initial_values(eq::ElasticWave, scenario::PlanarWaves, global_position; t=0.0)
     pxg, pyg = global_position
+    
     f1(x) = 2*pi*sin(2*pi*x)
+   
     
     lam = 2.2
     mu = 1.3
     rho = 1.2
     cp = sqrt((lam + 2*mu)/rho)   
     cs = sqrt(mu/rho) 
-    
+
     ox = (lam+2*mu) * (-f1(pxg-cp*t))
     oy = lam * (-f1(pxg-cp*t))
     oxy = mu * (-f1(pxg-cs*t))
     u = cp * f1(pxg-cp*t)
     v = cs * f1(pxg-cs*t)
-
+    
     [ox, oy, oxy, u, v, lam, mu, rho]
 end
 
