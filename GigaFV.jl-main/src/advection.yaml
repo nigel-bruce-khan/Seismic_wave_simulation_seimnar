@@ -1,0 +1,16 @@
+simulation:
+  end_time: 1.0
+  grid_elements: 50
+  grid_size: 1.0
+
+solver:
+  courant: 0.5
+  timeintegrator: Euler
+
+equation:
+  equation: advection
+  scenario: planar_waves
+
+output:
+  start: 0 #s
+  step: 0.1 #s
