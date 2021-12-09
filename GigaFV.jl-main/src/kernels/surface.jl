@@ -60,11 +60,11 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
             numericalflux[s.u] = .- cp .* ((normalsign .* (oxr .- oxl) .* cp) ./ (lam .+ 2 .* mu) .+ normalsign .* (oxyr .- oxyl))
             numericalflux[s.v] = .- cs .* ((normalsign .* (oxyr .- oxyl) .* cs) ./ mu .+ normalsign .* (vr .- vl))
 	elseif normalidx == 2
-            numericalflux[s.ox] = .- lam .* normalsign .* (oyr .- oyl)
-            numericalflux[s.oy] = .- (lam .+ 2 .* mu) .* normalsign .* (vr .- vl)
-            numericalflux[s.oxy] = .- mu .* normalsign .* (ur .- ul)
-            numericalflux[s.u] = .- ((cs .* cs) .* normalsign .* (oxyr .- oxyl)) .+ (cs .* normalsign .* (ur .- ul) ./ 2)
-            numericalflux[s.v] = .- (cp .* cp) .* normalsign .* (oyr .- oyl) ./ (lam .+ 2 .* mu)
+            numericalflux[s.ox] = 0 
+            numericalflux[s.oy] = 0 
+            numericalflux[s.oxy] = 0 
+            numericalflux[s.u] = 0 
+            numericalflux[s.v] = 0 
         end
 	
 	
