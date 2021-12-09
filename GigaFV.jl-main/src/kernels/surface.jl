@@ -35,8 +35,40 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
     maxeigenval_left = max_eigenval(eq, dofs, normalidx)
     maxeigenval_right = max_eigenval(eq, dofsneigh, normalidx)
     maxeigenval = max(maxeigenval_left, maxeigenval_right)
+    
+    s = ElasticWaveShortcuts()
+    oxl = dofs[s.ox]
+    oxr = dofsneigh[s.ox]
+    oyl = dofs[s.oy]
+    oyr = dofsneigh[s.oy]
+    oxyl = dofs[s.oxy]
+    oxyr = dofsneigh[s.oxy]
+    ul = dofs[s.u]
+    ur = dofsneigh[s.u]
+    vl = dofs[s.v]
+    vr = dofsneigh[s.v]
+    lam = 2.2
+    mu = 1.3
+    rho = 1.2
+    cp = sqrt((lam + 2*mu)/rho)   
+    cs = sqrt(mu/rho)
 
-    @views @inbounds numericalflux .= 0.5 .* (flux[normalidx,:] .+ fluxneigh[normalidx,:]) .+ 0.5 .* maxeigenval .* normalsign .* (dofs .- dofsneigh)
+	if normalidx == 1
+            numericalflux[s.ox] = 0
+            numericalflux[s.oy] = 0
+            numericalflux[s.oxy] = 0
+            numericalflux[s.u] = .- cp .* ((normalsign .* (oxr .- oxl) .* cp) ./ (lam .+ 2 .* mu) .+ normalsign .* (oxyr .- oxyl))
+            numericalflux[s.v] = .- cs .* ((normalsign .* (oxyr .- oxyl) .* cs) ./ mu .+ normalsign .* (vr .- vl))
+	elseif normalidx == 2
+            numericalflux[s.ox] = .- lam .* normalsign .* (oyr .- oyl)
+            numericalflux[s.oy] = .- (lam .+ 2 .* mu) .* normalsign .* (vr .- vl)
+            numericalflux[s.oxy] = .- mu .* normalsign .* (ur .- ul)
+            numericalflux[s.u] = .- ((cs .* cs) .* normalsign .* (oxyr .- oxyl)) .+ (cs .* normalsign .* (ur .- ul) ./ 2)
+            numericalflux[s.v] = .- (cp .* cp) .* normalsign .* (oyr .- oyl) ./ (lam .+ 2 .* mu)
+        end
+	
+	
+	
 end
 
 """
