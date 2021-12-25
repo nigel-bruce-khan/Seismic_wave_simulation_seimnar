@@ -37,35 +37,83 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
     maxeigenval = max(maxeigenval_left, maxeigenval_right)
     
     s = ElasticWaveShortcuts()
-    oxl = dofs[s.ox]
-    oxr = dofsneigh[s.ox]
-    oyl = dofs[s.oy]
-    oyr = dofsneigh[s.oy]
-    oxyl = dofs[s.oxy]
-    oxyr = dofsneigh[s.oxy]
-    ul = dofs[s.u]
-    ur = dofsneigh[s.u]
-    vl = dofs[s.v]
-    vr = dofsneigh[s.v]
+    oxl = dofsneigh[s.ox]
+    oxr = dofs[s.ox]
+    oyl = dofsneigh[s.oy]
+    oyr = dofs[s.oy]
+    oxyl = dofsneigh[s.oxy]
+    oxyr = dofs[s.oxy]
+    ul = dofsneigh[s.u]
+    ur = dofs[s.u]
+    vl = dofsneigh[s.v]
+    vr = dofs[s.v]
     lam = 2.2
     mu = 1.3
     rho = 1.2
     cp = sqrt((lam + 2*mu)/rho)   
     cs = sqrt(mu/rho)
-
+    xterm3 = oyl - lam * (oxl/(lam + 2*mu))
+	yterm3 = oxl - lam * (- (vl/cp) + (oyl+vl/cp*(lam+2*mu))/(lam+2*mu))
+	
+	
+	xoxstar = (lam+2mu)/2  * ((oxl/(lam+2*mu) + ul/cp) + ((oxr)/(lam+2*mu) - ur/cp)) 
+	xoystar = lam/2 * ((oxl/(lam+2*mu) + ul/cp) + ((oxr)/(lam+2*mu) - ur/cp)) + xterm3
+	xoxystar = mu/2 * ((oxyr/mu - vr/cs) + (oxyl/mu + vl/cs))
+	xustar = cp/2 * ((oxl/(lam+2*mu) + ul/cp) - ((oxr)/(lam+2*mu) - ur/cp)) 
+	xvstar = cs/2 * (-(oxyr/mu - vr/cs) + (oxyl/mu + vl/cs))
+	
+	yoxstar = lam * ((oyl + (vl/cp * (lam + 2*mu)))/(2*(lam + 2*mu)) + (-vr/cp + (oyr + vr*(lam+2*mu)/cp)/(2*(lam+2*mu)))) + yterm3
+	yoystar = (lam+2mu) * ((oyl + (vl/cp * (lam + 2*mu)))/(2*(lam + 2*mu)) + (-vr/cp + (oyr + vr*(lam+2*mu)/cp)/(2*(lam+2*mu))))
+	yoxystar = mu * ((oxyl + mu*(ul-cs*oxyl/mu)/(mu+cs))/(mu) - (ur - cs*oxyr/mu)/(mu+cs))
+	yustar = cs * ((oxyl + mu*(ul-cs*oxyl/mu)/(mu+cs))/(mu) + (ur - cs*oxyr/mu)/(mu+cs))
+	yvstar = cp * ((oyl + (vl/cp * (lam + 2*mu)))/(2*(lam + 2*mu)) - (-vr/cp + (oyr + vr*(lam+2*mu)/cp)/(2*(lam+2*mu))))
+	
 	if normalidx == 1
+	
+			"""
+			numericalflux[s.ox] = (lam+2*mu) * ustar
+            numericalflux[s.oy] = lam * ustar
+            numericalflux[s.oxy] = mu * vstar
+            numericalflux[s.u] = 1/rho * oxstar
+            numericalflux[s.v] = 1/rho * oxystar
+            
+			
             numericalflux[s.ox] = 0
             numericalflux[s.oy] = 0
             numericalflux[s.oxy] = 0
-            numericalflux[s.u] = .- cp .* ((normalsign .* (oxr .- oxl) .* cp ./ (lam .+ 2 .* mu)) .+ (normalsign .* (oxyr .- oxyl)))
-            numericalflux[s.v] = .- cs .* ((normalsign .* (oxyr .- oxyl) .* cs ./ mu) .+ (normalsign .* (vr .- vl)))
+            numericalflux[s.u] = - cp .* ((normalsign .* (oxr .- oxl) .* cp ./ (lam .+ 2 .* mu)) .+ (normalsign .* (oxyr .- oxyl)))
+            numericalflux[s.v] = - cs .* ((normalsign .* (oxyr .- oxyl) .* cs ./ mu) .+ (normalsign .* (vr .- vl)))
+      		"""
+      		
+      		numericalflux[s.ox] = (lam+2*mu) * xustar
+            numericalflux[s.oy] = lam * xustar
+            numericalflux[s.oxy] = mu * xvstar
+            numericalflux[s.u] = 1/rho * xoxstar
+            numericalflux[s.v] = 1/rho * xoxystar
+            
 	elseif normalidx == 2
-            numericalflux[s.ox] = - lam .* normalsign .* (vr - vl) 
-            numericalflux[s.oy] = - (lam + 2 * mu) .* normalsign .* (vr - vl) 
-            numericalflux[s.oxy] = - mu .* normalsign .* (ur - ul) 
-            numericalflux[s.u] = - ((cs * cs) / mu) .* normalsign .* (oxyr - oxyl) 
-            numericalflux[s.v] = - ((cp * cp) / (lam + 2 * mu)) .* normalsign .* (oyr - oyl) 
-        end
+			  """
+			numericalflux[s.ox] = 0
+            numericalflux[s.oy] = 0
+            numericalflux[s.oxy] = 0
+            numericalflux[s.u] = 0
+            numericalflux[s.v] = 0
+            """
+			numericalflux[s.ox] = lam * yvstar
+            numericalflux[s.oy] = (lam+2*mu) * yvstar
+            numericalflux[s.oxy] = mu * yustar
+            numericalflux[s.u] = 1/rho * yoxystar
+            numericalflux[s.v] = 1/rho * yoystar
+            
+          
+	   		"""
+            numericalflux[s.ox] = - lam .* normalsign .* (vr .- vl) 
+            numericalflux[s.oy] = - (lam .+ 2 .* mu) .* normalsign .* (vr .- vl) 
+            numericalflux[s.oxy] = - mu .* normalsign .* (ur .- ul) 
+            numericalflux[s.u] = - ((cs .* cs) ./ mu) .* normalsign .* (oxyr .- oxyl) 
+            numericalflux[s.v] = - ((cp .* cp) ./ (lam .+ 2 .* mu)) .* normalsign .* (oyr .- oyl) 
+            """
+	end
 	
 	
 	
@@ -79,7 +127,7 @@ Computes face integrals for equation `eq`, cell `cell` on face `face`.
 Buffers are passed in `buffers`.
 Result is stored in `celldu`.
 """
-function evaluate_face_integral(eq,globals, dofs, dofsneigh, flux, fluxneigh, buffers, cell, face, celldu)
+function evaluate_face_integral(eq, globals, dofs, dofsneigh, flux, fluxneigh, buffers, cell, face, celldu)
     normalidx = globals.normalidxs[face]
     normalsign = globals.normalsigns[face]
 
