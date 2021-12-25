@@ -37,16 +37,16 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
     maxeigenval = max(maxeigenval_left, maxeigenval_right)
     
     s = ElasticWaveShortcuts()
-    oxl = dofsneigh[s.ox]
-    oxr = dofs[s.ox]
-    oyl = dofsneigh[s.oy]
-    oyr = dofs[s.oy]
-    oxyl = dofsneigh[s.oxy]
-    oxyr = dofs[s.oxy]
-    ul = dofsneigh[s.u]
-    ur = dofs[s.u]
-    vl = dofsneigh[s.v]
-    vr = dofs[s.v]
+    oxl = dofs[s.ox]
+    oxr = dofsneigh[s.ox]
+    oyl = dofs[s.oy]
+    oyr = dofsneigh[s.oy]
+    oxyl = dofs[s.oxy]
+    oxyr = dofsneigh[s.oxy]
+    ul = dofs[s.u]
+    ur = dofsneigh[s.u]
+    vl = dofs[s.v]
+    vr = dofsneigh[s.v]
     lam = 2.2
     mu = 1.3
     rho = 1.2
@@ -71,40 +71,46 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
 	if normalidx == 1
 	
 			"""
-			numericalflux[s.ox] = (lam+2*mu) * ustar
-            numericalflux[s.oy] = lam * ustar
-            numericalflux[s.oxy] = mu * vstar
-            numericalflux[s.u] = 1/rho * oxstar
-            numericalflux[s.v] = 1/rho * oxystar
-            
-			
             numericalflux[s.ox] = 0
             numericalflux[s.oy] = 0
             numericalflux[s.oxy] = 0
             numericalflux[s.u] = - cp .* ((normalsign .* (oxr .- oxl) .* cp ./ (lam .+ 2 .* mu)) .+ (normalsign .* (oxyr .- oxyl)))
             numericalflux[s.v] = - cs .* ((normalsign .* (oxyr .- oxyl) .* cs ./ mu) .+ (normalsign .* (vr .- vl)))
-      		"""
-      		
-      		numericalflux[s.ox] = (lam+2*mu) * xustar
+            
+            numericalflux[s.ox] = (lam+2*mu) * xustar
             numericalflux[s.oy] = lam * xustar
             numericalflux[s.oxy] = mu * xvstar
             numericalflux[s.u] = 1/rho * xoxstar
             numericalflux[s.v] = 1/rho * xoxystar
-            
+      		"""
+      		
+      		numericalflux[s.ox] = (lam+2*mu) * xustar
+            numericalflux[s.oy] = 0
+            numericalflux[s.oxy] = 0
+            numericalflux[s.u] = 1/rho * xoxstar
+            numericalflux[s.v] = 0
+          
 	elseif normalidx == 2
-			  """
+			  
 			numericalflux[s.ox] = 0
             numericalflux[s.oy] = 0
             numericalflux[s.oxy] = 0
             numericalflux[s.u] = 0
             numericalflux[s.v] = 0
-            """
+            
+            """  
+            numericalflux[s.ox] = 0
+            numericalflux[s.oy] = (lam+2*mu) * yvstar
+            numericalflux[s.oxy] = 0
+            numericalflux[s.u] = 0
+            numericalflux[s.v] = 1/rho * yoystar
+         
 			numericalflux[s.ox] = lam * yvstar
             numericalflux[s.oy] = (lam+2*mu) * yvstar
             numericalflux[s.oxy] = mu * yustar
             numericalflux[s.u] = 1/rho * yoxystar
             numericalflux[s.v] = 1/rho * yoystar
-            
+            """
           
 	   		"""
             numericalflux[s.ox] = - lam .* normalsign .* (vr .- vl) 
