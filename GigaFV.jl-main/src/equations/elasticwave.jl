@@ -84,7 +84,7 @@ function get_initial_values(eq::ElasticWave, scenario::PlanarWaves, global_posit
     #Recabba thesis
     ox = (lam+2*mu) * (-f1(pxg-cp*t))											#-k*sin(2*pi*(x[0] - cp*t))*(lam + 2*mu)', # sig11
 	oy = lam * (-f1(pxg-cp*t))													#-k*sin(2*pi*(x[0] - cp*t))*lam' # sig22 , # sig22
-	oxy = -f1(pxg-cs*t) 	   	 												#-2*0.5*k*sin(k*(x[0] - cs*t))*mu' # sig12
+	oxy = mu * (-f1(pxg - cs * t))	   	 									#-2*0.5*k*sin(k*(x[0] - cs*t))*mu' # sig12
 	u = cp * f1(pxg-cp*t)														#cp*k*sin(k*(x[0] - cp*t))' # u
 	v = cs * f1(pxg-cs*t)														#cs*k*sin(k*(x[0] - cs*t))' # v	
 	
