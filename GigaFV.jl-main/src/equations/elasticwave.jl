@@ -52,7 +52,7 @@ function get_initial_values(eq::ElasticWave, scenario::PlanarWaves, global_posit
     oxy = 0
     u = cp * f1(pxg-cp*t)
     v = 0
-    """
+   """
     
     """
     # only y-side
@@ -63,12 +63,31 @@ function get_initial_values(eq::ElasticWave, scenario::PlanarWaves, global_posit
     v = cp * f1(pyg-cp*t)
     """
     
+     """
+    #2d
     ox = (lam + 2 * mu) * (- f1(pxg + pyg - cp * t) + f1(pxg + pyg - cs * t)) + lam * (- f1(pxg + pyg - cp * t) - f1(pxg + pyg - cs * t))
     oy = lam * (- f1(pxg + pyg - cp * t) + f1(pxg + pyg - cs * t)) + (lam + 2 * mu) * (- f1(pxg + pyg - cp * t) - f1(pxg + pyg - cs * t))
     oxy = mu * (- 2 * f1(pxg + pyg - cp * t))
     u = cp * f1(pxg + pyg - cp * t) - cs * f1(pxg + pyg - cs * t)
     v = cp * f1(pxg + pyg - cp * t) + cs * f1(pxg + pyg - cs * t)
+    """
     
+    """
+    #similar to acoustic wave equation
+    ox = (lam+2*mu) * (-f1(pxg-cp*t))
+    oy = (lam+2*mu) * (-f1(pyg-cp*t))
+    oxy = 0
+    u = cp * f1(pxg-cp*t)
+    v = cp * f1(pyg-cp*t)
+    """
+    
+    #Recabba thesis
+    ox = (lam+2*mu) * (-f1(pxg-cp*t))											#-k*sin(2*pi*(x[0] - cp*t))*(lam + 2*mu)', # sig11
+	oy = lam * (-f1(pxg-cp*t))													#-k*sin(2*pi*(x[0] - cp*t))*lam' # sig22 , # sig22
+	oxy = -f1(pxg-cs*t) 	   	 												#-2*0.5*k*sin(k*(x[0] - cs*t))*mu' # sig12
+	u = cp * f1(pxg-cp*t)														#cp*k*sin(k*(x[0] - cp*t))' # u
+	v = cs * f1(pxg-cs*t)														#cs*k*sin(k*(x[0] - cs*t))' # v	
+	
     [ox, oy, oxy, u, v, lam, mu, rho]
 end
 
