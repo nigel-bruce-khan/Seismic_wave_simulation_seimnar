@@ -47,9 +47,9 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
     ur = dofsneigh[s.u]
     vl = dofs[s.v]
     vr = dofsneigh[s.v]
-    lam = dofs[s.lam]
-    mu = dofs[s.mu]
-    rho = dofs[s.rho]
+    lam = 2.2
+    mu = 1.3
+    rho = 1.2
     cp = sqrt((lam + 2*mu)/rho)   
     cs = sqrt(mu/rho)
     xterm3 = oyr - lam * (oxr/(lam + 2*mu))
