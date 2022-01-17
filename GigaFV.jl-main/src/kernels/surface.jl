@@ -55,14 +55,14 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
     xterm3 = oyr - lam * (oxr/(lam + 2*mu))
 	yterm3 = oxr - lam * (oyr/(lam + 2*mu))
 	
-	xoxstar = (lam+2mu)/2 * ((oxl+oxr)/(lam+2*mu) + normalsign*(ul - ur)/cp)
+	xoxstar = (lam+2*mu)/2 * ((oxl+oxr)/(lam+2*mu) + normalsign*(ul - ur)/cp)
 	xoystar = lam/2 * ((oxl+oxr)/(lam+2*mu) + normalsign*(ul - ur)/cp) + xterm3
 	xoxystar = mu/2 * ((oxyr+oxyl)/mu + normalsign*(vl-vr)/cs)
 	xustar = cp/2 * (normalsign*(oxl-oxr)/(lam+2*mu) + (ul+ur)/cp)
 	xvstar = cs/2 * (normalsign*(oxyl-oxyr)/mu + (vr+vl)/cs)
 	
 	yoxstar = lam * ((oyl + oyr)/(2*(lam + 2*mu)) + normalsign*(vl-vr)/(2*cp)) + yterm3
-	yoystar = (lam+2mu) * ((oyl + oyr)/(2*(lam + 2*mu)) + normalsign*(vl-vr)/(2*cp))
+	yoystar = (lam+2*mu) * ((oyl + oyr)/(2*(lam + 2*mu)) + normalsign*(vl-vr)/(2*cp))
 	yoxystar = mu * (oxyl/mu + normalsign*(ul-ur)/(2*cs) + normalsign*(oxyr-oxyl)/(mu*2))
 	yustar = cs * (oxyl/mu + (ul+ur)/(2*cs) - (oxyr+oxyl)/(mu*2))
 	yvstar = cp * (normalsign*(oyl - oyr)/(2*(lam + 2*mu)) + (vl+vr)/(2*cp))
