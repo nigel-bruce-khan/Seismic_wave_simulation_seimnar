@@ -64,7 +64,7 @@ function local_lax_friedrichs(eq, dofs, dofsneigh, flux, fluxneigh, dx, normalid
 	yoxstar = lam * ((oyl + oyr)/(2*(lam + 2*mu)) + normalsign*(vl-vr)/(2*cp)) + yterm3
 	yoystar = (lam+2*mu) * ((oyl + oyr)/(2*(lam + 2*mu)) + normalsign*(vl-vr)/(2*cp))
 	yoxystar = mu * (oxyl/mu + normalsign*(ul-ur)/(2*cs) + normalsign*(oxyr-oxyl)/(mu*2))
-	yustar = cs * (oxyl/mu + (ul+ur)/(2*cs) - (oxyr+oxyl)/(mu*2))
+	yustar = cs/2 * (normalsign*(oxyl-oxyr)/mu + (ul+ur)/cs)
 	yvstar = cp * (normalsign*(oyl - oyr)/(2*(lam + 2*mu)) + (vl+vr)/(2*cp))
 	
 
